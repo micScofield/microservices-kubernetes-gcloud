@@ -1,9 +1,12 @@
 import express, { Request, Response } from 'express'
 import { body, validationResult } from 'express-validator'
 
+import { RequestValidationError } from '../errors/request-validation-error'
+import { DatabaseConnectionError } from '../errors/database-connection-error'
+
 const router = express.Router()
 
-router.get(
+router.post(
     '/api/users/signup',
     [
         body('email').isEmail().withMessage('Invalid Email !'),
@@ -12,10 +15,11 @@ router.get(
     (req: Request, res: Response) => {
         const errors = validationResult(req)
         if (!errors.isEmpty()) {
-            res.status(422).send(errors.array())
+            throw new RequestValidationError(errors.array())
         }
 
         const { email, password } = req.body
+        throw new DatabaseConnectionError()
     }
 )
 
