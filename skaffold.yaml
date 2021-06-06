@@ -16,5 +16,5 @@ build:
         dockerfile: Dockerfile
       sync:
         manual:
-          - src: 'src/**/*.ts' #take all ts files from src
+          - src: 'src/**/*.ts' #take all .ts files from src
             dest: . #where to sync inside running container
