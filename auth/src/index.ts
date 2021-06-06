@@ -12,12 +12,12 @@ import { NotFoundError } from './errors/not-found-error'
 import { errorHandler } from './middlewares/error-handler'
 
 const app = express()
-
+app.set('trust proxy', true)
 app.use(json())
 
 app.use(cookieSession({
-    secure: true, //send over https connection only
-    signed: false //no encryption on cookie
+    signed: false, //no encryption on cookie
+    secure: true //send over https connection only
 }))
 
 // User Routes
@@ -34,6 +34,11 @@ app.all('*', async (req, res, next) => {
 app.use(errorHandler)
 
 const start = async () => {
+
+    if (!process.env.JWT_KEY) {
+        throw new Error('JWT_KEY env variable missing')
+    }
+    
     try {
         await mongoose.connect(
             'mongodb://auth-mongo-srv:27017/auth', 
