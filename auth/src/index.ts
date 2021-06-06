@@ -1,6 +1,8 @@
 import express from 'express'
 import 'express-async-errors'
 import { json } from 'body-parser'
+import mongoose from 'mongoose'
+import cookieSession from 'cookie-session'
 
 import { currentUserRouter } from './routes/current-user'
 import { signinRouter } from './routes/signin'
@@ -8,11 +10,15 @@ import { signoutRouter } from './routes/signout'
 import { signupRouter } from './routes/signup'
 import { NotFoundError } from './errors/not-found-error'
 import { errorHandler } from './middlewares/error-handler'
-import mongoose from 'mongoose'
 
 const app = express()
 
 app.use(json())
+
+app.use(cookieSession({
+    secure: true, //send over https connection only
+    signed: false //no encryption on cookie
+}))
 
 // User Routes
 app.use(currentUserRouter)
