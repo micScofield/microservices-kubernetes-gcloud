@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tickets-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tickets
+  #specify how to create pods, match selector name with below
+  template:
+    metadata:
+      labels:
+        app: tickets
+    spec:
+      containers: 
+        - name: tickets #this name can be anything and we will use this for logging purposes lets say
+          image: asia.gcr.io/ticketing-316209/tickets
+          env:
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: tickets-srv
+spec:
+  selector:
+    app: tickets #specify which selector to match with. Write same name as above
+  ports:
+    - name: tickets
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
