@@ -14,7 +14,7 @@ spec:
     spec:
       containers: 
         - name: client #this name can be anything and we will use this for logging purposes lets say
-          image: asia.gcr.io/ticketing-dev-315817/client
+          image: asia.gcr.io/ticketing-316209/client
 ---
 apiVersion: v1
 kind: Service

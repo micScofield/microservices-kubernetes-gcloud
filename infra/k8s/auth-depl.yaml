@@ -15,7 +15,7 @@ spec:
     spec:
       containers: 
         - name: auth #this name can be anything and we will use this for logging purposes lets say
-          image: asia.gcr.io/ticketing-dev-315817/auth
+          image: asia.gcr.io/ticketing-316209/auth
           env:
             - name: JWT_KEY
               valueFrom:
