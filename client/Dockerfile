@@ -1,10 +1,8 @@
 FROM node:alpine
-env CI = true
 
-WORKDIR app/
-
+WORKDIR /app
 COPY package.json .
 RUN npm install
-
 COPY . .
+
 CMD ["npm", "run", "dev"]

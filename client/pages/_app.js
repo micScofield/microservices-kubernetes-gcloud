@@ -1,7 +1,29 @@
-import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap/dist/css/bootstrap.css';
+import buildClient from '../api/build-client';
+import Header from '../components/header';
 
-// next.js takes our pages as per request and take them through a _app.js file. Here we are specifying our custom _app.js file. So for eg, index.js will be put inside this Component and next will return the rendered html with css accordingly.
+const AppComponent = ({ Component, pageProps, currentUser }) => {
+  return (
+    <div>
+      <Header currentUser={currentUser} />
+      <Component {...pageProps} />
+    </div>
+  );
+};
 
-export default ({ Component, pageProps }) => {
-    return <Component {...pageProps} />
-}
+AppComponent.getInitialProps = async appContext => {
+  const client = buildClient(appContext.ctx);
+  const { data } = await client.get('/api/users/currentuser');
+
+  let pageProps = {};
+  if (appContext.Component.getInitialProps) {
+    pageProps = await appContext.Component.getInitialProps(appContext.ctx);
+  }
+
+  return {
+    pageProps,
+    ...data
+  };
+};
+
+export default AppComponent;
