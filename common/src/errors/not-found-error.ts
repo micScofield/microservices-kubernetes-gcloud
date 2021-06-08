@@ -1,15 +1,16 @@
-import { CustomError } from './custom-error';
+import { CustomError } from './custom-error'
 
 export class NotFoundError extends CustomError {
-  statusCode = 404;
+    statusCode = 404
+    reason = 'Route not found'
 
-  constructor() {
-    super('Route not found');
+    constructor() {
+        super('Route not found 404')
 
-    Object.setPrototypeOf(this, NotFoundError.prototype);
-  }
+        //only because of typescript, we need to specify that we are extending a built in class
+        Object.setPrototypeOf(this, NotFoundError.prototype) 
+    }
 
-  serializeErrors() {
-    return [{ message: 'Not Found' }];
-  }
+    serializeErrors = () => ([{ message: this.reason }])
 }
+

@@ -1,12 +1,10 @@
 import express, { Request, Response } from 'express'
 import { body } from 'express-validator'
 import jwt from 'jsonwebtoken'
+import { validateRequest, BadRequestError, DatabaseConnectionError } from '@jainsanyam/common'
 
 import { Password } from '../utilities/password'
 import { User } from '../models/user'
-import { validateRequest } from '../middlewares/validate-request'
-import { BadRequestError } from '../errors/bad-request-error'
-import { DatabaseConnectionError } from '../errors/database-connection-error'
 
 const router = express.Router()
 

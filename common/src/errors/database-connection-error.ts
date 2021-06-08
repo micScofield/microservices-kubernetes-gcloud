@@ -1,16 +1,16 @@
-import { CustomError } from './custom-error';
+import { CustomError } from './custom-error'
 
 export class DatabaseConnectionError extends CustomError {
-  statusCode = 500;
-  reason = 'Error connecting to database';
+    statusCode = 500
+    reason = 'Error connecting to database'
 
-  constructor() {
-    super('Error connecting to db');
+    constructor() {
+        super('unprocessable entity 422')
 
-    Object.setPrototypeOf(this, DatabaseConnectionError.prototype);
-  }
+        //only because of typescript, we need to specify that we are extending a built in class
+        Object.setPrototypeOf(this, DatabaseConnectionError.prototype) 
+    }
 
-  serializeErrors() {
-    return [{ message: this.reason }];
-  }
+    serializeErrors = () => ([{ message: this.reason }])
 }
+

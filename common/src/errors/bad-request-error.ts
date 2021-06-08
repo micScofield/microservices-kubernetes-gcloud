@@ -1,15 +1,15 @@
-import { CustomError } from './custom-error';
+import { CustomError } from './custom-error'
 
 export class BadRequestError extends CustomError {
-  statusCode = 400;
+    statusCode = 422
 
-  constructor(public message: string) {
-    super(message);
+    constructor(public message: string) {
+        super('unprocessable entity 422') // or super(message)
 
-    Object.setPrototypeOf(this, BadRequestError.prototype);
-  }
+        //only because of typescript, we need to specify that we are extending a built in class
+        Object.setPrototypeOf(this, BadRequestError.prototype) 
+    }
 
-  serializeErrors() {
-    return [{ message: this.message }];
-  }
+    serializeErrors = () => ([{ message: this.message }])
 }
+
