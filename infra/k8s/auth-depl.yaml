@@ -17,6 +17,8 @@ spec:
         - name: auth #this name can be anything and we will use this for logging purposes lets say
           image: asia.gcr.io/ticketing-316209/auth
           env:
+            - name: MONGO_URI
+              value: 'mongodb://auth-mongo-srv:27017/auth'
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:

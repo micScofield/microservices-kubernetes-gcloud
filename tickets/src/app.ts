@@ -2,8 +2,12 @@ import express from 'express'
 import 'express-async-errors'
 import { json } from 'body-parser'
 import cookieSession from 'cookie-session'
-import { NotFoundError, errorHandler } from '@jainsanyam/common'
+import { NotFoundError, errorHandler, currentUser } from '@jainsanyam/common'
 
+import { createTicketRouter } from './routes/new';
+import { showTicketRouter } from './routes/show';
+import { indexTicketRouter } from './routes/index';
+import { updateTicketRouter } from './routes/update';
 
 const app = express()
 app.set('trust proxy', true)
@@ -14,9 +18,14 @@ app.use(cookieSession({
     secure: process.env.NODE_ENV !== 'test' //send over https connection only
 }))
 
-// Ticket Routes
-app.get('/api/tickets', (req, res) => res.send('From tickets service'))
+app.use(currentUser);
 
+// Ticket Routes
+
+app.use(createTicketRouter);
+app.use(showTicketRouter);
+app.use(indexTicketRouter);
+app.use(updateTicketRouter);
 
 // 404
 app.all('*', async (req, res, next) => {

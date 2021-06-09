@@ -8,9 +8,13 @@ const start = async () => {
         throw new Error('JWT_KEY env variable missing')
     }
     
+    if (!process.env.MONGO_URI) {
+        throw new Error('MONGO_URI env variable missing')
+    }
+
     try {
         await mongoose.connect(
-            'mongodb://tickets-mongo-srv:27017/auth', 
+            process.env.MONGO_URI, 
             { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }
         )
         console.log('db connected')
