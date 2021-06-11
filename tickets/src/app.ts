@@ -21,7 +21,6 @@ app.use(cookieSession({
 app.use(currentUser);
 
 // Ticket Routes
-
 app.use(createTicketRouter);
 app.use(showTicketRouter);
 app.use(indexTicketRouter);
