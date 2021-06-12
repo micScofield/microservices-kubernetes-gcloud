@@ -57,7 +57,6 @@ ticketSchema.methods.isReserved = async function() {
     }
   })
 
-  console.log(existingOrder)
   if (existingOrder) return true
 
   return false

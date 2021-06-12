@@ -18,7 +18,7 @@ build:
         manual:
           - src: 'src/**/*.ts' #watch all .ts files from src directory
             dest: . #where to sync inside running container
-    - image: asia.gcr.io/ticketing-316209/tickets #hosts image in gcloud repo
+    - image: asia.gcr.io/ticketing-316209/tickets
       context: tickets
       docker: 
         dockerfile: Dockerfile

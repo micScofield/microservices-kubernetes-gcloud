@@ -7,8 +7,8 @@ import {
   OrderStatus,
   BadRequestError,
 } from '@jainsanyam/common'
-import { body } from 'express-validator'
 
+import { body } from 'express-validator'
 import { Ticket } from '../models/ticket'
 import { Order } from '../models/order'
 
@@ -51,9 +51,8 @@ router.post(
       userId: req.currentUser!.id,
       status: OrderStatus.Created,
       expiresAt: expiration,
-      ticket
+      ticket,
     })
-
     await order.save()
 
     // Publish an event saying that an order was created
