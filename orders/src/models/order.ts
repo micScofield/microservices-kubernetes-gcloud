@@ -1,50 +1,60 @@
 import mongoose from 'mongoose'
+import { OrderStatus } from '@jainsanyam/common'
+
+import { TicketDoc } from './ticket'
 
 interface OrderAttrs {
-  title: string
-  price: number
-  userId: string
+    userId: string
+    status: OrderStatus
+    expiresAt: Date
+    ticket: TicketDoc
 }
 
 interface OrderDoc extends mongoose.Document {
-  title: string
-  price: number
-  userId: string
+    userId: string
+    status: OrderStatus
+    expiresAt: Date
+    ticket: TicketDoc
 }
 
 interface OrderModel extends mongoose.Model<OrderDoc> {
-  build(attrs: OrderAttrs): OrderDoc
+    build(attrs: OrderAttrs): OrderDoc
 }
 
 const orderSchema = new mongoose.Schema(
-  {
-    title: {
-      type: String,
-      required: true,
+    {
+        userId: {
+            type: String,
+            required: true,
+        },
+        status: {
+            type: String,
+            required: true,
+            enum: Object.values(OrderStatus), // In JS, we dont have enums, so we can pass a freezed object as an argument
+            default: OrderStatus.Created, //not required though
+        },
+        expiresAt: {
+            type: mongoose.Schema.Types.Date,
+        },
+        ticket: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Ticket',
+        }
     },
-    price: {
-      type: Number,
-      required: true,
-    },
-    userId: {
-      type: String,
-      required: true,
-    },
-  },
-  {
-    toJSON: {
-      transform(doc, ret) {
-        ret.id = ret._id
-        delete ret._id
-      },
-    },
-  }
+    {
+        toJSON: {
+            transform(doc, ret) {
+                ret.id = ret._id
+                delete ret._id
+            }
+        }
+    }
 )
 
 orderSchema.statics.build = (attrs: OrderAttrs) => {
-  return new Order(attrs)
+    return new Order(attrs)
 }
 
 const Order = mongoose.model<OrderDoc, OrderModel>('Order', orderSchema)
 
-export { Order }
+export { Order, OrderStatus }
