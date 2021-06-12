@@ -52,6 +52,7 @@ Using function() {} because we need to access "this".
 */
 ticketSchema.methods.isReserved = async function() {
   const existingOrder = await Order.findOne({
+    ticket: this.id, // this refers to document here, we need to find ticket by id
     status: {
       $in: [ OrderStatus.Created, OrderStatus.AwaitingPayment, OrderStatus.Complete ]
     }

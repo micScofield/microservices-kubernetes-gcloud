@@ -12,8 +12,7 @@ const buildTicket = async () => {
 
     return ticket
 }
-it.todo('fetches order for a particular user')
-/*
+
 it('fetches orders for an particular user', async () => {
     // Create three tickets
     const ticketOne = await buildTicket()
@@ -56,4 +55,3 @@ it('fetches orders for an particular user', async () => {
     expect(response.body[0].ticket.id).toEqual(ticketTwo.id)
     expect(response.body[1].ticket.id).toEqual(ticketThree.id)
 })
-*/
