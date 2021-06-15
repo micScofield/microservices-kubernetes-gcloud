@@ -19,7 +19,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@jainsanyam/common": "^1.0.12",
+    "@jainsanyam/common": "^1.0.13",
     "@types/bull": "^3.15.1",
     "bull": "^3.22.8",
     "ts-node-dev": "^1.1.6",
