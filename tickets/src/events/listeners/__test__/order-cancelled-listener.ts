@@ -1,14 +1,14 @@
 import { Message } from 'node-nats-streaming'
 import mongoose from 'mongoose'
-import { OrderCreatedEvent, OrderStatus } from '@jainsanyam/common'
+import { OrderCancelledEvent, OrderStatus } from '@jainsanyam/common'
 
-import { OrderCreatedListener } from '../order-created-listener'
+import { OrderCancelledListener } from '../order-cancelled-listener'
 import { natsWrapper } from '../../../nats-wrapper' // jest mocked import
 import { Ticket } from '../../../models/ticket'
 
 const setup = async () => {
     // create an instance of the listener
-    const listener = new OrderCreatedListener(natsWrapper.client)
+    const listener = new OrderCancelledListener(natsWrapper.client)
 
     // create and save a ticket
     const ticket = Ticket.build({
@@ -17,18 +17,17 @@ const setup = async () => {
         userId: '123'
     })
 
+    const orderId = mongoose.Types.ObjectId().toHexString()
+    ticket.set({ orderId }) // not written in build because ticket updated interface expects an orderId not ticketCreatedEvent
+
     await ticket.save()
 
     // create a fake data event
-    const data: OrderCreatedEvent['data'] = {
+    const data: OrderCancelledEvent['data'] = {
         version: 0,
-        id: new mongoose.Types.ObjectId().toHexString(),
-        userId: new mongoose.Types.ObjectId().toHexString(),
-        status: OrderStatus.Created,
-        expiresAt: '',
+        id: orderId,
         ticket: {
             id: ticket.id,
-            price: ticket.price
         }
     }
 
@@ -38,7 +37,7 @@ const setup = async () => {
         ack: jest.fn(),
     }
 
-    return { listener, data, msg, ticket }
+    return { listener, data, msg, ticket, orderId }
 }
 
 it('sets the orderId of a ticket', async () => {
@@ -51,7 +50,7 @@ it('sets the orderId of a ticket', async () => {
     const updatedTicket = await Ticket.findById(ticket.id)
 
     expect(updatedTicket).toBeDefined()
-    expect(updatedTicket!.orderId).toEqual(data.id)
+    expect(updatedTicket!.orderId).toBeUndefined()
 })
 
 it('acks the message', async () => {
@@ -65,7 +64,7 @@ it('acks the message', async () => {
 })
 
 it('publishes a ticket updated event', async () => {
-    const { listener, ticket, data, msg } = await setup()
+    const { listener, data, msg } = await setup()
 
     await listener.onMessage(data, msg)
 
@@ -75,8 +74,8 @@ it('publishes a ticket updated event', async () => {
 
     // Check whether publish was invoked with correct arguments or not
     // Tell jest that publish is a mock function 
-    
+
     const ticketUpdatedData = JSON.parse((natsWrapper.client.publish as jest.Mock).mock.calls[0][1]) // fetches the list of arguments as JSON. Do a console log to check what lies at [0] and so on. 
 
-    expect(ticketUpdatedData.orderId).toEqual(data.id) // dataId is the orderId
+    expect(ticketUpdatedData.orderId).toBeUndefined() // dataId is the orderId
 })

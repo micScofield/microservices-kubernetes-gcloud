@@ -5,7 +5,8 @@ import {
   NotFoundError,
   requireAuth,
   NotAuthorizedError,
-  DatabaseConnectionError
+  DatabaseConnectionError,
+  BadRequestError
 } from '@jainsanyam/common'
 
 import { Ticket } from '../models/ticket'
@@ -33,6 +34,11 @@ router.put(
 
     if (ticket.userId !== req.currentUser!.id) {
       throw new NotAuthorizedError()
+    }
+
+    // check whether ticket is reserved or not
+    if (ticket.orderId) {
+      throw new BadRequestError('Ticket is reserved. Cannot edit now !')
     }
 
     ticket.set({

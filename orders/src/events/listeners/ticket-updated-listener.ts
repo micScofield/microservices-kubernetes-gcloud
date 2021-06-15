@@ -23,12 +23,10 @@ export class TicketUpdatedListener extends Listener<TicketUpdatedEvent> {
         const { title, price } = data
 
         // make updates and save
-
         ticket.set({ title, price })
         await ticket.save()
 
-        // await Ticket.findOneAndUpdate({ _id: ticket.id }, { $set: { title, price } }, { new: true })
-
+        // publish an event to sync versions
         msg.ack()
     }
 }

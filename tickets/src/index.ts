@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import { OrderCreatedListener } from './events/listeners/order-created-listener'
+import { OrderCancelledListener } from './events/listeners/order-cancelled-listener'
 
 import { app } from './app'
 import { natsWrapper } from './nats-wrapper'
@@ -39,6 +40,8 @@ const start = async () => {
         process.on('SIGTERM', () => natsWrapper.client.close())
 
         // listeners
+        new OrderCreatedListener(natsWrapper.client).listen()
+        new OrderCancelledListener(natsWrapper.client).listen()
 
         await mongoose.connect(
             process.env.MONGO_URI, 
