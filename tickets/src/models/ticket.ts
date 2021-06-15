@@ -4,13 +4,14 @@ import { updateIfCurrentPlugin } from 'mongoose-update-if-current'
 interface TicketAttrs {
   title: string
   price: number
-  userId: string
+  userId: string 
 }
 
 interface TicketDoc extends mongoose.Document {
   title: string
   price: number
   userId: string
+  orderId?: string //1. to determine whether ticket is reserved or not, 2. "?" because this can either by null or a string. Not setting this field as required.
   version: number
 }
 
@@ -32,6 +33,9 @@ const ticketSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    orderId: {
+      type: String
+    }
   },
   {
     toJSON: {

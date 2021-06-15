@@ -1,6 +1,6 @@
 import { Ticket } from '../ticket'
 
-it('implements optimistic concurrency control', async (done) => {
+it('implements optimistic concurrency control', async () => {
     // Create an instance of a ticket
     const ticket = Ticket.build({
         title: 'concert',
@@ -23,10 +23,17 @@ it('implements optimistic concurrency control', async (done) => {
     await firstInstance!.save()
 
     // save the second fetched ticket and expect an error
+
+    // expect(async () => {
+    //     await secondInstance!.save() // Not working as plugin is not throwing error
+    // }).toThrow()
+
+    // Alternate way:
+
     try {
         await secondInstance!.save()
     } catch (err) {
-        return done() //tell jest to get out of this test
+        return
     }
 
     throw new Error('Should not reach this point')

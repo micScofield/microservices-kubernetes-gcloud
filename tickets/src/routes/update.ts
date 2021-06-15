@@ -4,7 +4,8 @@ import {
   validateRequest,
   NotFoundError,
   requireAuth,
-  NotAuthorizedError
+  NotAuthorizedError,
+  DatabaseConnectionError
 } from '@jainsanyam/common'
 
 import { Ticket } from '../models/ticket'
@@ -39,7 +40,11 @@ router.put(
       price: req.body.price,
     })
     
-    await ticket.save()
+    try {
+      await ticket.save()
+    } catch (err) {
+      throw new DatabaseConnectionError()
+    }
 
     await new TicketUpdatedPublisher(natsWrapper.client).publish({
       id: ticket.id,
