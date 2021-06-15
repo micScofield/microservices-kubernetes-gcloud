@@ -1,5 +1,5 @@
 import request from 'supertest'
-
+import mongoose from 'mongoose'
 import { app } from '../../app'
 import { Ticket } from '../../models/ticket'
 import { Order, OrderStatus } from '../../models/order'
@@ -10,6 +10,7 @@ it('marks an order as cancelled', async () => {
   const ticket = Ticket.build({
     title: 'concert',
     price: 20,
+    id: new mongoose.Types.ObjectId().toHexString()
   })
   await ticket.save()
 
@@ -38,6 +39,7 @@ it('emits a order cancelled event', async () => {
   const ticket = Ticket.build({
     title: 'concert',
     price: 20,
+    id: new mongoose.Types.ObjectId().toHexString()
   })
   await ticket.save()
 

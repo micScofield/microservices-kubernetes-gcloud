@@ -16,7 +16,6 @@ export class TicketUpdatedListener extends Listener<TicketUpdatedEvent> {
         // const ticket = Ticket.findByIdAndUpdate(id, { $set: { title, price } }) this was used before static method findByEvent
 
         const ticket = await Ticket.findByEvent(data)
-
         if (!ticket) {
             throw new NotFoundError()
         }
@@ -26,7 +25,6 @@ export class TicketUpdatedListener extends Listener<TicketUpdatedEvent> {
         // make updates and save
         ticket.set({ title, price })
         await ticket.save()
-
         msg.ack()
     }
 }

@@ -4,7 +4,7 @@ import nats, { Stan } from 'node-nats-streaming'
 class NatsWrapper {
     private _client?: Stan //_client? tells that it may be undefined for some time.
 
-    // this get thing is only available in TS. In other files, access this client using natsWrapper.client
+    // this get thing is only available in TS. We can now, access this client using natsWrapper.client
     get client() {
         if (!this._client) {
             throw new Error('Cannot access nats client before connecting')
