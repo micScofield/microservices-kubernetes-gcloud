@@ -1,11 +1,12 @@
 import mongoose from 'mongoose'
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current'
 // import { OrderStatus } from '@jainsanyam/common'
 
 import { Order, OrderStatus } from './order'
 
 interface TicketAttrs {
   title: string
-  price: number,
+  price: number
   id: string // we need to manually store the same ticket id which we listened during ticket-created event (for our tickets collection because we will refer the same id to ticket service upon order cancelled events etc.)
 }
 
@@ -13,10 +14,12 @@ interface TicketDoc extends mongoose.Document {
   title: string
   price: number
   isReserved(): Promise<boolean>
+  version: number
 }
 
 interface TicketModel extends mongoose.Model<TicketDoc> {
   build(attrs: TicketAttrs): TicketDoc
+  findByEvent(event: { id: string, version: number }): Promise<TicketDoc | null>
 }
 
 const ticketSchema = new mongoose.Schema(
@@ -41,12 +44,23 @@ const ticketSchema = new mongoose.Schema(
   }
 )
 
+// OCC
+ticketSchema.set('versionKey', 'version')
+ticketSchema.plugin(updateIfCurrentPlugin)
+
 //defined just to use ts features like when creating a ticket, we get hints on what it requires
 ticketSchema.statics.build = (attrs: TicketAttrs) => {
   return new Ticket({
     _id: attrs.id, // because to set manual _id, we need to pass it ourselves. To allow passing of id inside other files, we are making this assignment here. Now in other files, we can build using { title, price, id } and no need for { title, price, _id: id }
     title: attrs.title,
     price: attrs.price
+  })
+}
+
+ticketSchema.statics.findByEvent = (event: { id: string, version: number }) => {
+  return Ticket.findOne({
+    _id: event.id,
+    version: event.version - 1
   })
 }
 

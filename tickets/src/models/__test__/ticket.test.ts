@@ -40,7 +40,7 @@ it('increments the version number on multiple saves', async () => {
     })
 
     await ticket.save()
-    expect(ticket.version).toEqual(0)
+    expect(ticket.version).toEqual(0) // default version on initial creation is 0
 
     await ticket.save()
     expect(ticket.version).toEqual(1)

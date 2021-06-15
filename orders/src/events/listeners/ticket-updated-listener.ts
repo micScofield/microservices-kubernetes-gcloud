@@ -11,13 +11,21 @@ export class TicketUpdatedListener extends Listener<TicketUpdatedEvent> {
     queueGroupName = queueGroupName
 
     async onMessage(data: TicketUpdatedEvent['data'], msg: Message) {
-        // find ticket inside tickets collection and update
-        const { id, title, price } = data
-        const ticket = Ticket.findByIdAndUpdate(id, { $set: { title, price } })
+        // find ticket inside tickets collection and update (Check for version as well so as to prevent concurrency issues)
+
+        // const ticket = Ticket.findByIdAndUpdate(id, { $set: { title, price } }) this was used before static method findByEvent
+
+        const ticket = await Ticket.findByEvent(data)
 
         if (!ticket) {
             throw new NotFoundError()
         }
+
+        const { title, price } = data
+
+        // make updates and save
+        ticket.set({ title, price })
+        await ticket.save()
 
         msg.ack()
     }
