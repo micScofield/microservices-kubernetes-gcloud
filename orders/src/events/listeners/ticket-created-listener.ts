@@ -10,6 +10,7 @@ export class TicketCreatedListener extends Listener<TicketCreatedEvent> {
     subject: Subjects.TicketCreated = Subjects.TicketCreated
     queueGroupName = queueGroupName
 
+    // on message, we want to store that ticket inside tickets collection
     async onMessage(data: TicketCreatedEvent['data'], msg: Message) {
         // we need title and price out of data
         const { title, price, id } = data
