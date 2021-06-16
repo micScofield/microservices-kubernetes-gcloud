@@ -12,6 +12,9 @@ declare global {
   }
 }
 
+// specify stripe key here for that realistic approach in testing stripe flow
+process.env.STRIPE_KEY = 'sk_test_51J2wBOSJifs6EgWZGHbLHWHWfv2WMvWAhcyeNNXPCUWlTFZq4635Vh9ENfvvojQ9zQS38j4rmKRQmtAUFhtOCOPJ00VxEcX6rs'
+
 let mongo: any
 beforeAll(async () => {
   process.env.JWT_KEY = 'asdfasdf'

@@ -25,8 +25,6 @@ router.post(
 
     const order = await Order.findById(orderId)
 
-    console.log(order)
-
     if (!order) {
       throw new NotFoundError()
     }
@@ -38,13 +36,29 @@ router.post(
     }
 
     // make use of stripe
-    await stripe.charges.create({
-      currency: 'usd',
-      amount: order.price * 100, // amount needs to be in cents
-      source: token // from req.body
-    })
+    try {
+      await stripe.charges.create({
+        currency: 'usd',
+        amount: order.price * 100, // amount needs to be in cents
+        source: token, // from req.body
+        description: 'Testing purposes',
+        shipping: {
+          name: 'Jenny Rosen',
+          address: {
+            line1: '510 Townsend St',
+            postal_code: '000000',
+            city: 'San Francisco',
+            state: 'CA',
+            country: 'US',
+          },
+        },
+      })
+    } catch (err) {
+      console.log(err)
+      throw new Error(err)
+    }
 
-    res.send({ success: true })
+    res.status(201).send({ success: true })
   }
 )
 
