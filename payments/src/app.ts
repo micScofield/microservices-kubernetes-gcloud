@@ -4,6 +4,8 @@ import { json } from 'body-parser'
 import cookieSession from 'cookie-session'
 import { NotFoundError, errorHandler, currentUser } from '@jainsanyam/common'
 
+import { createChargeRouter } from './routes/new'
+
 const app = express()
 app.set('trust proxy', true)
 app.use(json())
@@ -13,7 +15,10 @@ app.use(cookieSession({
     secure: process.env.NODE_ENV !== 'test' //send over https connection only
 }))
 
-app.use(currentUser);
+app.use(currentUser)
+
+// routes
+app.use(createChargeRouter)
 
 // 404
 app.all('*', async (req, res, next) => {

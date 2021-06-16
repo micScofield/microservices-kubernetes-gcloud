@@ -27,6 +27,10 @@ const start = async () => {
         throw new Error('NATS_CLIENT_ID env variable missing')
     }
 
+    if (!process.env.STRIPE_KEY) {
+        throw new Error('STRIPE_KEY env variable missing')
+    }
+
     try {
         await natsWrapper.connect(process.env.NATS_CLUSTER_ID, process.env.NATS_CLIENT_ID, process.env.NATS_URL) 
         //cluster id is the one which we gave inside nats-depl file
