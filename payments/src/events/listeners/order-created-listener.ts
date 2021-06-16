@@ -22,17 +22,6 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
 
         await order.save()
 
-        // emit(publish) an event so that tickets collection inside Order's service can also update its version and all services which are storing ticket versions can be in sync.
-
-        // await new TicketUpdatedPublisher(this.client).publish({
-        //     id: ticket.id,
-        //     price: ticket.price,
-        //     title: ticket.title,
-        //     userId: ticket.userId,
-        //     orderId: ticket.orderId,
-        //     version: ticket.version
-        // })
-
         msg.ack()
     }
 
