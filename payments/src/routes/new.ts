@@ -12,6 +12,8 @@ import {
 import { Order } from '../models/order'
 import { Payment } from '../models/payment'
 import { stripe } from '../stripe'
+import { PaymentCreatedPublisher } from '../events/publishers/payment-created-publisher'
+import { natsWrapper } from '../nats-wrapper'
 
 const router = express.Router()
 
@@ -70,7 +72,14 @@ router.post(
 
         await payment.save()
 
-        res.status(201).send({ success: true })
+        // publish event
+        await new PaymentCreatedPublisher(natsWrapper.client).publish({
+            id: payment.id,
+            orderId: payment.orderId,
+            stripeId: payment.stripeId
+        })
+
+        res.status(201).send({ id: payment.id }) // doesnt matter what we return here as we are not using this info inside react app
     }
 )
 
