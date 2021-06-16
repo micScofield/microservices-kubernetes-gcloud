@@ -3,6 +3,7 @@ import request from 'supertest'
 import { OrderStatus } from '@jainsanyam/common'
 import { app } from '../../app'
 import { Order } from '../../models/order'
+import { Payment } from '../../models/payment'
 import { stripe } from '../../stripe'
 
 // jest.mock('../../stripe') // commented as instead of mock, we are making actual call to stripe api
@@ -120,4 +121,40 @@ it('returns a 201 with valid inputs', async () => {
 
   expect(stripeCharge).toBeDefined()
   expect(stripeCharge!.currency).toEqual('usd')
+})
+
+it('creates a payment after successful transaction', async () => {
+  const userId = mongoose.Types.ObjectId().toHexString()
+  const price = Math.floor(Math.random() * 100)
+  const order = Order.build({
+    id: mongoose.Types.ObjectId().toHexString(),
+    userId,
+    version: 0,
+    price,
+    status: OrderStatus.Created,
+  })
+  await order.save()
+  console.log(order)
+  await request(app)
+    .post('/api/payments')
+    .set('Cookie', global.signin(userId))
+    .send({
+      token: 'tok_visa',
+      orderId: order.id,
+    })
+    .expect(201)
+  const stripeCharges = await stripe.charges.list({ limit: 50 })
+  console.log(stripeCharges)
+  const stripeCharge = stripeCharges.data.find((charge) => {
+    return charge.amount === price * 100
+  })
+
+  expect(stripeCharge).toBeDefined()
+  
+  const payment = await Payment.findOne({
+    orderId: order.id,
+    stripeId: stripeCharge!.id
+  })
+
+  expect(payment).not.toBeNull() // it is either null or paymentDoc, cant use toBeDefined() here
 })
