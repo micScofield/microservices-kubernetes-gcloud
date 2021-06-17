@@ -8,6 +8,6 @@ jobs:
     runs-on: ubuntu-latest #specify machine
     steps:
       - uses: actions/checkout@v2 #take code out of our project
-      - run: cd orders && npm install && npm run test:ci #run tests for auth service "add a CI script inside package.json so that it runs only once and doesnt watch for changes"
+      - run: cd orders && npm install && npm run test:ci #run tests for orders service "add a CI script inside package.json so that it runs only once and doesnt watch for changes"
       
     
