@@ -1,0 +1,25 @@
+name: deploy-payments
+
+on: 
+  push: 
+    branches:
+      - master
+    paths:
+      - 'payments/**'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: cd payments && docker build -t sanyamjain221/payments . #build an image
+      - run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u $DOCKER_USERNAME --password-stdin #we have added these two secrets inside repo already
+        env: #tell github to treat them as env variables
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - run: docker push sanyamjain221/payments #push image to dockerhub
+      - uses: digitalocean/action-doctl@v2 #use cloud provider action here
+        with:
+          token: 'digitalocean_access_token'
+      - run: doctl kubernetes cluster kubeconfig save ticketing #ticketing is cluster name
+      - run: kubectl rollout restart deployment payments-depl #restarts our deployment (payments-depl is deployment name inside configuration file)
+      
