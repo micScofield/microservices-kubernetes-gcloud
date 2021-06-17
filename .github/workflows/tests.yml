@@ -5,7 +5,7 @@ on:
   
 jobs:
   build:
-    runs-on: ubuntu:latest #specify machine
+    runs-on: ubuntu-latest #specify machine
     steps:
       - uses: actions/checkout@v2 #take code out of our project
       - run: cd auth && npm install && npm run test:ci #run tests for auth service ":ci is a gotcha"
