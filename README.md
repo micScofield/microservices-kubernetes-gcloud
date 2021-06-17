@@ -5,5 +5,5 @@ Other tech:
 1. For load balancer and routing requests: ingress-nginx
 2. For constantly watching over synced and non-synced files (dev mode): Skaffold
 3. Kubernetes on GCP for managing docker containers
-4. Digital Ocean for deployment
+4. Setup ready for digital ocean deployment (Not live currently)
 5. CI/CD enabled
