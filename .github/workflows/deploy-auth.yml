@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: cd auth && docker build -t sanyamj221/auth . #build an image
+      - run: cd auth && docker build -t sanyamjain221/auth . #build an image
       - run: docker login -u $DOCKER_USERNAME -p DOCKER_PASSWORD #we have added these two secrets inside repo already
         env: #tell github to treat them as env variables
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
