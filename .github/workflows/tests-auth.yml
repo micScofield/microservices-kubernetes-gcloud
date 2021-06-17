@@ -1,7 +1,9 @@
 name: tests-auth
 
 on:
-  pull_request # on open, sync, re-open a PR
+  pull_request: # on open, sync, re-open a PR AND files inside auth/** has changed then only run this suite
+    paths:
+      - 'auth/**'
   
 jobs:
   build:
