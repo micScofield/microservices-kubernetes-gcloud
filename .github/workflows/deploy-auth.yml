@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: cd auth && docker build -t sanyamjain221/auth . #build an image
-      - run: docker login -u $DOCKER_USERNAME -p DOCKER_PASSWORD #we have added these two secrets inside repo already
+      - run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u $DOCKER_USERNAME --password-stdin #we have added these two secrets inside repo already
         env: #tell github to treat them as env variables
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
