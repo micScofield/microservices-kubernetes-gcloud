@@ -16,4 +16,4 @@ jobs:
         env: #tell github to treat them as env variables
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      - run: docker push sanyamj221/auth #push image to dockerhub
+      - run: docker push sanyamjain221/auth #push image to dockerhub
